@@ -318,9 +318,9 @@
         <aside id="leftsidebar" class="sidebar">
             <!-- User Info -->
             <div style="padding: 20px;">
-                <h3 style="margin-top:10px">Albim Cabatingan</h3>
-                <p class="margin-0">Director,</p>
-                <small><b>Human Resources and Development Office</b></small>
+                <h3 style="margin-top:10px">{{ Auth::user()->name }}</h3>
+                <p class="margin-0">{{ Auth::user()->position }},</p>
+                <small><b>{{ Auth::user()->department->name }}</b></small>
             </div>
             <!-- #User Info -->
             <!-- Menu -->
