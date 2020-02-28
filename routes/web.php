@@ -19,3 +19,5 @@ Route::get('/', ['middleware' => 'guest', function()
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::post('/newPost', 'PostController@newPost')->name('newPost');

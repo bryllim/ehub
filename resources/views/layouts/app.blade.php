@@ -69,13 +69,15 @@
 
     <!-- Demo Js -->
     <script src="{{ asset('js/demo.js') }}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <!-- Datatable Js -->
     <script type="text/javascript" charset="utf8" src="{{ asset('plugins/jquery-datatable/jquery.dataTables.js') }}"></script>
     <script type="text/javascript" charset="utf8" src="{{ asset('plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.min.js') }}"></script>
 </head>
 
-<body class="theme-green">
+<body class="theme-green">  
+    @include('sweet::alert')
     <!-- Page Loader -->
     <div class="page-loader-wrapper">
         <div class="loader">
