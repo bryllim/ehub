@@ -44,6 +44,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
     <script src="{{ asset('plugins/bootstrap-select/js/bootstrap-select.js') }}"></script>
 
+    <!-- Include the Quill library -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
     <!-- Slimscroll Plugin Js -->
     <script src="{{ asset('plugins/jquery-slimscroll/jquery.slimscroll.js') }}"></script>
 
