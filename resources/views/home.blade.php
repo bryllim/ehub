@@ -46,6 +46,7 @@
                     </div>
                 </div>
             </div>
+            <?php $comments = App\Comment::where('post_id', '=', $post->id)->get(); ?>
             <div class="panel-footer">
                 <ul>
                     <li>
@@ -57,17 +58,34 @@
                     <li>
                         <a href="javascript:void(0);" data-toggle="collapse" data-target="#{{ $post->id }}comment">
                             <i class="material-icons">comment</i>
-                            <span>5 Comments</span>
+                           <span>
+                            <span id="comment_count_{{ $post->id }}">
+                            @if(count($comments) > 0)
+                                {{count($comments)}}
+                            @else
+                                No
+                            @endif
+                            </span>
+                            <span id="comment_plural_{{ $post->id }}">
+                            @if(count($comments) != 1)
+                            Comments
+                            @else
+                            Comment
+                            @endif
+                            </span>
+                            </span>
                         </a>
                     </li>
                     <li></li>
                 </ul>
                 <hr>
                 <div class="collapse" id="{{ $post->id }}comment">
+                    @foreach($comments as $comment)
                     <div class="font-12 well" style="border-radius: 5px; padding-left:10px; padding-top:10px; padding-bottom:2px; padding-right:10px; margin-bottom:3px">
-                        <p><b>Bryl Kezter Lim</b> <span class="text-muted" style="float:right"><small><i class="material-icons font-12">access_time</i> 11:45 AM - Feb 26, 2020</small></span></p>
-                        <p style="margin-top: -5px">Are you sure about this? It's not too late to reconsider.</p>
+                        <p><b>{{ $comment->user->name }}</b> <span class="text-muted" style="float:right"><small><i class="material-icons font-12">access_time</i> {{ $comment->created_at->diffForHumans() }}</small></span></p>
+                        <p style="margin-top: -5px">{{ $comment->content }}</p>
                     </div>
+                    @endforeach
                 </div>
                 <div class="form-group">
                     <div class="form-line">
@@ -230,13 +248,14 @@ function fetchComments($id) {
         success:function(data) {
             $("#"+$id+"comment").empty();
             for (i = 0; i < data.length; i++) {
-                console.log(data[i].content);
                 $("#"+$id+"comment").append(
                     '<div class="font-12 well" style="border-radius: 5px; padding-left:10px; padding-top:10px; padding-bottom:2px; padding-right:10px; margin-bottom:3px">'+
                         '<p><b>'+data[i].user+'</b> <span class="text-muted" style="float:right"><small><i class="material-icons font-12">access_time</i> '+data[i].date+'</small></span></p>'+
                         '<p style="margin-top: -5px">'+data[i].content+'</p>'+
                     '</div>'
                 );
+                $("#comment_count_"+$id).text( data.length );
+                $("#comment_plural_"+$id).text(( data.length == 1)?"Comment":"Comments");
             }
         }
     });
