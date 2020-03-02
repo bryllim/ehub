@@ -169,7 +169,19 @@
         </div>
     </div>
 </div>
+<script src="https://js.pusher.com/5.1/pusher.min.js"></script>
 <script>
+//For realtime comments
+    var pusher = new Pusher('378b727ac032138844eb', {
+      cluster: 'ap1',
+      forceTLS: true
+    });
+
+    var channel = pusher.subscribe('comment-channel');
+    channel.bind('new-comment', function(data) {
+        // fetchComments(data.message);
+        console.log("goodshit");
+    });
 
 // New Post Rich Text Editor
 var quill = new Quill('#editor', {
@@ -203,9 +215,6 @@ $('.new_comment').keypress(function(event){
         var post_id = comment.attr('id');
         var content = comment.val();
         comment.val('');
-        
-        $("#"+post_id+"comment").empty();
-        $("#"+post_id+"comment").collapse();
 
 		$.ajax({
             type:'POST',
@@ -223,6 +232,11 @@ $('.new_comment').keypress(function(event){
 });
 
 function fetchComments($id) {
+
+    // Refreshing the comments
+    $("#"+$id+"comment").empty();
+    $("#"+$id+"comment").collapse();
+
     // Setting up the preloader
     $("#"+$id+"comment").append(
         '<div class="preloader" style="margin-left:45%">'+
