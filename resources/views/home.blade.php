@@ -55,7 +55,7 @@
                         <a href="#" class="font-13" data-toggle="modal" data-target="#acknowledgements">12 Acknowledgements</a>
                     </li>
                     <li>
-                        <a href="#" data-toggle="collapse" data-target="#collapseExample">
+                        <a href="javascript:void(0);" data-toggle="collapse" data-target="#{{ $post->id }}comment">
                             <i class="material-icons">comment</i>
                             <span>5 Comments</span>
                         </a>
@@ -63,7 +63,7 @@
                     <li></li>
                 </ul>
                 <hr>
-                <div class="collapse" id="collapseExample">
+                <div class="collapse" id="{{ $post->id }}comment">
                     <div class="font-12 well" style="border-radius: 5px; padding-left:10px; padding-top:10px; padding-bottom:2px; padding-right:10px; margin-bottom:3px">
                         <p><b>Bryl Kezter Lim</b> <span class="text-muted" style="float:right"><small><i class="material-icons font-12">access_time</i> 11:45 AM - Feb 26, 2020</small></span></p>
                         <p style="margin-top: -5px">Are you sure about this? It's not too late to reconsider.</p>
@@ -71,7 +71,7 @@
                 </div>
                 <div class="form-group">
                     <div class="form-line">
-                        <input type="text" class="form-control" placeholder="Write a comment...">
+                        <input type="text" class="form-control new_comment" id="{{ $post->id }}" placeholder="Write a comment...">
                     </div>
                 </div>
             </div>
@@ -152,6 +152,8 @@
     </div>
 </div>
 <script>
+
+// New Post Rich Text Editor
 var quill = new Quill('#editor', {
     modules: {
     toolbar: [
@@ -173,5 +175,71 @@ var quill = new Quill('#editor', {
     var html = myEditor.children[0].innerHTML
     $("#content").val(html);
   });
+
+// New Comment
+$('.new_comment').keypress(function(event){
+    
+	var keycode = (event.keyCode ? event.keyCode : event.which);
+	if(keycode == '13'){
+        var comment = $(this);
+        var post_id = comment.attr('id');
+        var content = comment.val();
+        comment.val('');
+        
+        $("#"+post_id+"comment").empty();
+        $("#"+post_id+"comment").collapse();
+
+		$.ajax({
+            type:'POST',
+            url:"{{ route('newComment') }}",
+            headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+            data: {content: content, post_id: post_id},
+            success:function(data) {
+                fetchComments(post_id);
+            }
+        });
+
+	}
+});
+
+function fetchComments($id) {
+    // Setting up the preloader
+    $("#"+$id+"comment").append(
+        '<div class="preloader" style="margin-left:45%">'+
+            '<div class="spinner-layer pl-green">'+
+                '<div class="circle-clipper left">'+
+                    ' <div class="circle"></div>'+
+                ' </div>'+
+                '<div class="circle-clipper right">'+
+                    ' <div class="circle"></div>'+
+                '</div>'+
+            '</div>'+
+        '</div>'
+    );
+
+    // Actually getting the data
+    $.ajax({
+        type:'POST',
+        url:"{{ route('fetchComments') }}",
+        headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+        data: {id: $id},
+        success:function(data) {
+            $("#"+$id+"comment").empty();
+            for (i = 0; i < data.length; i++) {
+                console.log(data[i].content);
+                $("#"+$id+"comment").append(
+                    '<div class="font-12 well" style="border-radius: 5px; padding-left:10px; padding-top:10px; padding-bottom:2px; padding-right:10px; margin-bottom:3px">'+
+                        '<p><b>'+data[i].user+'</b> <span class="text-muted" style="float:right"><small><i class="material-icons font-12">access_time</i> '+data[i].date+'</small></span></p>'+
+                        '<p style="margin-top: -5px">'+data[i].content+'</p>'+
+                    '</div>'
+                );
+            }
+        }
+    });
+}
 </script>
 @endsection

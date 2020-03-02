@@ -21,3 +21,5 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::post('/newPost', 'PostController@newPost')->name('newPost');
+Route::post('/newComment', 'CommentController@newComment')->name('newComment');
+Route::post('/fetchComments', 'CommentController@fetchComments')->name('fetchComments');
