@@ -126,8 +126,10 @@
                     <a href="javascript:void(0);" class="list-group-item disabled" style="color:black !important">
                         <b>Online Employees</b>
                     </a>
-                    <a href="javascript:void(0);" class="list-group-item font-12"><p><span class="badge bg-green"><small>ONLINE</small></span></p> Cris Lawrence Adrian Militante</a>
-                    <a href="javascript:void(0);" class="list-group-item font-12"><p><span class="badge bg-green"><small>ONLINE</small></span></p> Cris Lawrence Adrian Militante</a>
+                    <?php $user = new App\User; $onlineusers = $user->mostRecentOnline();?>
+                    @foreach($onlineusers as $onlineuser)
+                    <a href="javascript:void(0);" class="list-group-item font-12"><p><span class="badge bg-green"><small>ONLINE</small></span></p> {{$onlineuser->name}}</a>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -167,14 +169,10 @@
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane fade active in" id="acknowledged">
                         <div class="list-group acknowledgedList">
-                            <a href="javascript:void(0);" class="list-group-item font-12">Cris Lawrence Adrian Militante <span class="badge bg-green" style="float:right"><small>ONLINE</small></span></a>
-                            <a href="javascript:void(0);" class="list-group-item font-12">Cris Lawrence Adrian Militante <span class="badge bg-green" style="float:right"><small>ONLINE</small></span></a>
                         </div>
                     </div>
                     <div role="tabpanel" class="tab-pane fade" id="pending">
                         <div class="list-group pendingList">
-                            <a href="javascript:void(0);" class="list-group-item font-12">Cris Lawrence Adrian Militante <span class="badge bg-green" style="float:right"><small>ONLINE</small></span></a>
-                            <a href="javascript:void(0);" class="list-group-item font-12">Cris Lawrence Adrian Militante <span class="badge bg-green" style="float:right"><small>ONLINE</small></span></a>
                         </a>
                     </div>
                 </div>
