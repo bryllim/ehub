@@ -50,10 +50,26 @@
             <div class="panel-footer">
                 <ul>
                     <li>
-                        <a href="#">
+                        <?php 
+                            $acknowledgements = App\Acknowledgement::where('post_id', '=', $post->id)->get();
+                            $isAcknowledged = ($acknowledgements->where('user_id', '=', Auth::user()->id)->first())?true:false;
+                        ?>
+                        <a href="javascript:void(0);" class="new_acknowledgement" post_id="{{ $post->id }}"
+                        @if($isAcknowledged)
+                        style="pointer-events: none; cursor: default; color:green"
+                        @endif
+                        >
                             <i class="material-icons green">thumb_up</i>
                         </a>
-                        <a href="#" class="font-13" data-toggle="modal" data-target="#acknowledgements">12 Acknowledgements</a>
+                        <a href="#" class="font-13 modalAcknowledgement" post_id="{{ $post->id }}" data-toggle="modal" data-target="#acknowledgements" id="acknowledgement_{{ $post->id }}">
+                        @if($acknowledgements->count() == 1)
+                        1 Acknowledgement
+                        @elseif($acknowledgements->count() == 0)
+                        No Acknowledgements
+                        @else
+                        {{ $acknowledgements->count() }} Acknowledgements
+                        @endif
+                        </a>
                     </li>
                     <li>
                         <a href="javascript:void(0);" data-toggle="collapse" data-target="#{{ $post->id }}comment">
@@ -150,16 +166,16 @@
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane fade active in" id="acknowledged">
-                        <div class="list-group">
+                        <div class="list-group acknowledgedList">
                             <a href="javascript:void(0);" class="list-group-item font-12">Cris Lawrence Adrian Militante <span class="badge bg-green" style="float:right"><small>ONLINE</small></span></a>
                             <a href="javascript:void(0);" class="list-group-item font-12">Cris Lawrence Adrian Militante <span class="badge bg-green" style="float:right"><small>ONLINE</small></span></a>
                         </div>
                     </div>
                     <div role="tabpanel" class="tab-pane fade" id="pending">
-                        <div class="list-group">
+                        <div class="list-group pendingList">
                             <a href="javascript:void(0);" class="list-group-item font-12">Cris Lawrence Adrian Militante <span class="badge bg-green" style="float:right"><small>ONLINE</small></span></a>
                             <a href="javascript:void(0);" class="list-group-item font-12">Cris Lawrence Adrian Militante <span class="badge bg-green" style="float:right"><small>ONLINE</small></span></a>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -180,6 +196,7 @@
     var channel = pusher.subscribe('comment-channel');
     channel.bind('new-comment', function(data) {
         // fetchComments(data.message);
+        alert("Received!");
     });
 
 // New Post Rich Text Editor
@@ -204,6 +221,111 @@ var quill = new Quill('#editor', {
     var html = myEditor.children[0].innerHTML
     $("#content").val(html);
   });
+
+// New Acknowledgement
+$('.new_acknowledgement').click(function(){
+    $(this).css('pointer-events', 'none');
+    $(this).css('cursor', 'default');
+    $(this).css('color', 'green');
+
+    var post_id = $(this).attr('post_id');
+
+    $.ajax({
+        type:'POST',
+        url:"{{ route('newAcknowledgement') }}",
+        headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+        data: {post_id: post_id},
+        success:function(data) {
+           
+            if(data != 1){
+                $("#acknowledgement_"+post_id).text(data+ " Acknowledgements");
+            }else{
+                $("#acknowledgement_"+post_id).text(data+ " Acknowledgement");
+            }
+            swal({
+                title: "Acknowledged!",
+                text: " ",
+                icon: "success",
+                buttons: false
+            });
+        }
+    });
+});
+
+// View Acknowledgements
+
+$(".modalAcknowledgement").click(function(){
+    var post_id = $(this).attr('post_id');
+    // Setting up the preloader
+    $(".acknowledgedList").empty();
+    $(".pendingList").empty();
+    $(".acknowledgedList").append(
+        '<div class="preloader" style="margin-left:45%; margin-top: 10%">'+
+            '<div class="spinner-layer pl-green">'+
+                '<div class="circle-clipper left">'+
+                    ' <div class="circle"></div>'+
+                ' </div>'+
+                '<div class="circle-clipper right">'+
+                    ' <div class="circle"></div>'+
+                '</div>'+
+            '</div>'+
+        '</div>'
+    );
+    $(".pendingList").append(
+        '<div class="preloader" style="margin-left:45%; margin-top: 10%">'+
+            '<div class="spinner-layer pl-green">'+
+                '<div class="circle-clipper left">'+
+                    ' <div class="circle"></div>'+
+                ' </div>'+
+                '<div class="circle-clipper right">'+
+                    ' <div class="circle"></div>'+
+                '</div>'+
+            '</div>'+
+        '</div>'
+    );
+
+    $.ajax({
+        type:'POST',
+        url:"{{ route('fetchAcknowledgement') }}",
+        headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+        data: {post_id: post_id},
+        success:function(data) {
+            var acknowledged = data.acknowledged;
+            var unacknowledged = data.unacknowledged;
+            $(".acknowledgedList").empty();
+            $(".pendingList").empty();
+
+            if(acknowledged.length != 0){
+                for (var i = 0; i < acknowledged.length; i++) {
+                    $(".acknowledgedList").append(
+                        '<a href="javascript:void(0);" class="list-group-item font-12">'+acknowledged[i]+'</a>'
+                    );   
+                }
+            }else{
+                $(".acknowledgedList").append(
+                    '<br><p style="text-align:center"><i>There are currently no acknowledgements.</i></p>'
+                );
+            }
+            
+            if(unacknowledged.length != 0){
+                for (var i = 0; i < unacknowledged.length; i++) {
+                    $(".pendingList").append(
+                        '<a href="javascript:void(0);" class="list-group-item font-12">'+unacknowledged[i]+'</a>'
+                    );   
+                }
+            }else{
+                $(".pendingList").append(
+                    '<br><p style="text-align:center"><i>Everyone has acknowledged.</i></p>'
+                );
+            }
+        }
+    });
+
+});
 
 // New Comment
 $('.new_comment').keypress(function(event){
