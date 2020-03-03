@@ -128,7 +128,9 @@
                     </a>
                     <?php $user = new App\User; $onlineusers = $user->mostRecentOnline();?>
                     @foreach($onlineusers as $onlineuser)
-                    <a href="javascript:void(0);" class="list-group-item font-12"><p><span class="badge bg-green"><small>ONLINE</small></span></p> {{$onlineuser->name}}</a>
+                        @if($onlineuser->id != Auth::user()->id)
+                            <a href="javascript:void(0);" class="list-group-item font-12"><p><span class="badge bg-green"><small>ONLINE</small></span></p> {{$onlineuser->name}}</a>
+                        @endif
                     @endforeach
                 </div>
             </div>
