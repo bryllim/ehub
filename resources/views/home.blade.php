@@ -180,7 +180,6 @@
     var channel = pusher.subscribe('comment-channel');
     channel.bind('new-comment', function(data) {
         // fetchComments(data.message);
-        console.log("goodshit");
     });
 
 // New Post Rich Text Editor
