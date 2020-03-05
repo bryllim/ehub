@@ -127,11 +127,16 @@
                         <b>Online Employees</b>
                     </a>
                     <?php $user = new App\User; $onlineusers = $user->mostRecentOnline();?>
+                    @if( count($onlineusers) > 1 )
                     @foreach($onlineusers as $onlineuser)
                         @if($onlineuser->id != Auth::user()->id)
                             <a href="javascript:void(0);" class="list-group-item font-12"><p><span class="badge bg-green"><small>ONLINE</small></span></p> {{$onlineuser->name}}</a>
                         @endif
                     @endforeach
+                    @else
+                    <br>
+                    <p style="text-align:center"><small><i>No employees online.</i></small></p>
+                    @endif
                 </div>
             </div>
         </div>

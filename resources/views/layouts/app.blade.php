@@ -337,8 +337,8 @@
                             <span>Home</span>
                         </a>
                     </li>
-                    <li class="{{ ( request()->routeIs('service-requests') ) ? 'active' : '' }}">
-                        <a href="{{ route('home') }}">
+                    <li class="{{ ( request()->routeIs('servicerequests') ) ? 'active' : '' }}">
+                        <a href="{{ route('servicerequests') }}">
                             <i class="material-icons">assignment</i>
                             <span>Service Requests</span>
                         </a>
