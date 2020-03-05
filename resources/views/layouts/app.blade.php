@@ -77,15 +77,6 @@
     <script type="text/javascript" charset="utf8" src="{{ asset('plugins/jquery-datatable/jquery.dataTables.js') }}"></script>
     <script type="text/javascript" charset="utf8" src="{{ asset('plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.min.js') }}"></script>
 </head>
-<style>
-    .pagination > .active > span:focus {
-    background-color: forestgreen;
-    border-color: forestgreen;
-    }
-    .input-group .form-line:after {
-      border-bottom: 2px solid forestgreen; }
-</style>
-
 <body class="theme-green">  
     @include('sweet::alert')
     <!-- Page Loader -->
