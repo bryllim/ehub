@@ -32,5 +32,22 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/fetchAcknowledgement', 'AcknowledgementController@fetchAcknowledgement')->name('fetchAcknowledgement');
 
     Route::post('/storeRequest', 'RequestController@storeRequest')->name('storeRequest');
+
+    //Realtime Comment Broadcasting
+    Route::get('/broadcastComment/{post_id}', function($post_id){
+        $options = array(
+            'cluster' => 'ap1',
+            'useTLS' => true
+          );
+          $pusher = new Pusher\Pusher(
+            '378b727ac032138844eb',
+            '4e22ed055b9e20179c93',
+            '956675',
+            $options
+          );
+        
+          $data['message'] = $post_id;
+          $pusher->trigger('comment-channel', 'new-comment', $data);
+    });
     
 });

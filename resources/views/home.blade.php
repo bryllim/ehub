@@ -200,8 +200,7 @@
 
     var channel = pusher.subscribe('comment-channel');
     channel.bind('new-comment', function(data) {
-        // fetchComments(data.message);
-        alert("Received!");
+        fetchComments(data.message);
     });
 
 // New Post Rich Text Editor
@@ -350,7 +349,7 @@ $('.new_comment').keypress(function(event){
                 },
             data: {content: content, post_id: post_id},
             success:function(data) {
-                fetchComments(post_id);
+                broadcastComment(post_id);
             }
         });
 
@@ -398,6 +397,13 @@ function fetchComments($id) {
                 $("#comment_plural_"+$id).text(( data.length == 1)?"Comment":"Comments");
             }
         }
+    });
+}
+
+function broadcastComment($post_id){
+    $.ajax({
+        type:'GET',
+        url:"{{ URL::to('/') }}/broadcastComment/"+$post_id
     });
 }
 </script>
