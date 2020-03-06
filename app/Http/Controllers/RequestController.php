@@ -29,7 +29,7 @@ class RequestController extends Controller
         $service->save();
 
         alert()->success(' ', 'Service Request created!');
-        return view("service");
+        return redirect('servicerequests');
     }
 
 }
