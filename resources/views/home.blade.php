@@ -202,6 +202,9 @@
     channel.bind('new-comment', function(data) {
         fetchComments(data.message);
     });
+    channel.bind('new-acknowledgement', function(data) {
+        $("#acknowledgement_"+data.message).text(data.number+ " Acknowledgements");
+    });
 
 // New Post Rich Text Editor
 var quill = new Quill('#editor', {
@@ -242,12 +245,7 @@ $('.new_acknowledgement').click(function(){
             },
         data: {post_id: post_id},
         success:function(data) {
-           
-            if(data != 1){
-                $("#acknowledgement_"+post_id).text(data+ " Acknowledgements");
-            }else{
-                $("#acknowledgement_"+post_id).text(data+ " Acknowledgement");
-            }
+            broadcastAcknowledgement(post_id, data);
             swal({
                 title: "Acknowledged!",
                 text: " ",
@@ -404,6 +402,13 @@ function broadcastComment($post_id){
     $.ajax({
         type:'GET',
         url:"{{ URL::to('/') }}/broadcastComment/"+$post_id
+    });
+}
+
+function broadcastAcknowledgement($post_id, $number){
+    $.ajax({
+        type:'GET',
+        url:"{{ URL::to('/') }}/broadcastAcknowledgement/"+$post_id+"/"+$number
     });
 }
 </script>

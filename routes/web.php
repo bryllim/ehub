@@ -49,5 +49,22 @@ Route::group(['middleware' => 'auth'], function () {
           $data['message'] = $post_id;
           $pusher->trigger('comment-channel', 'new-comment', $data);
     });
+    //Realtime Acknowledgement Broadcasting
+    Route::get('/broadcastAcknowledgement/{post_id}/{number}', function($post_id, $number){
+        $options = array(
+            'cluster' => 'ap1',
+            'useTLS' => true
+          );
+          $pusher = new Pusher\Pusher(
+            '378b727ac032138844eb',
+            '4e22ed055b9e20179c93',
+            '956675',
+            $options
+          );
+        
+          $data['message'] = $post_id;
+          $data['number'] = $number;
+          $pusher->trigger('comment-channel', 'new-acknowledgement', $data);
+    });
     
 });
