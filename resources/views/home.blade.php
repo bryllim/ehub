@@ -124,19 +124,28 @@
                 <hr>
                 <div class="list-group">
                     <a href="javascript:void(0);" class="list-group-item disabled" style="color:black !important">
-                        <b>Online Employees</b>
+                        <b>Employees</b>
                     </a>
-                    <?php $user = new App\User; $onlineusers = $user->mostRecentOnline();?>
-                    @if( count($onlineusers) > 1 )
+                    <?php
+                        $users = new App\User;
+                        $onlineusers = $users->mostRecentOnline();
+                    ?>
                     @foreach($onlineusers as $onlineuser)
                         @if($onlineuser->id != Auth::user()->id)
                             <a href="javascript:void(0);" class="list-group-item font-12"><p><span class="badge bg-green"><small>ONLINE</small></span></p> {{$onlineuser->name}}</a>
                         @endif
                     @endforeach
-                    @else
-                    <br>
-                    <p style="text-align:center"><small><i>No employees online.</i></small></p>
-                    @endif
+                    <?php
+                        $users = App\User::all();
+                    ?>
+                    @foreach($users as $user)  
+                        <?php 
+                            $online = App\User::find($user->id);
+                        ?>
+                        @if(!$online->isOnline())
+                            <a href="javascript:void(0);" class="list-group-item font-12"><p></p>{{ $user->name }}</a>
+                        @endif
+                    @endforeach
                 </div>
             </div>
         </div>
