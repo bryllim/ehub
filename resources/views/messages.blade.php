@@ -14,7 +14,7 @@
                     ?>
                     @foreach($onlineusers as $onlineuser)
                         @if($onlineuser->id != Auth::user()->id)
-                        <a href="javascript:void(0);" class="list-group-item font-12">
+                        <a href="{{ url('message').'/'.$onlineuser->id }}" class="list-group-item font-12">
                             <p style="margin-bottom:0"><b>{{ $onlineuser->name }}</b> <span class="badge bg-green" style="float:right"><small>ONLINE</small></span></p>
                             <small>{{ $onlineuser->position }}, <b>{{ $onlineuser->department->name }}</b></small>
                         </a>
@@ -28,7 +28,7 @@
                             $online = App\User::find($user->id);
                         ?>
                         @if(!$online->isOnline())
-                            <a href="javascript:void(0);" class="list-group-item font-12">
+                            <a href="{{ url('message').'/'.$user->id }}" class="list-group-item font-12">
                                 <p style="margin-bottom:0"><b>{{ $user->name }}</b></p>
                                 <small>{{ $user->position }}, <b>{{ $user->department->name }}</b></small>
                             </a>

@@ -21,7 +21,6 @@ Auth::routes();
 Route::group(['middleware' => 'auth'], function () {
     
     Route::get('/home', 'HomeController@index')->name('home');
-    Route::get('/messages', 'messageController@index')->name('messages');
     Route::get('/servicerequests', 'RequestController@index')->name('servicerequests');
     Route::get('/newRequest', 'RequestController@newRequest')->name('newRequest');
     
@@ -33,6 +32,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/fetchAcknowledgement', 'AcknowledgementController@fetchAcknowledgement')->name('fetchAcknowledgement');
 
     Route::post('/storeRequest', 'RequestController@storeRequest')->name('storeRequest');
+
+    Route::get('/messages', 'MessageController@index')->name('messages');
+    Route::get('/message/{id}', 'MessageController@conversation');
+    Route::post('/newMessage', 'MessageController@newMessage')->name('newMessage');
 
     //Realtime Comment Broadcasting
     Route::get('/broadcastComment/{post_id}', function($post_id){
@@ -66,6 +69,25 @@ Route::group(['middleware' => 'auth'], function () {
           $data['message'] = $post_id;
           $data['number'] = $number;
           $pusher->trigger('comment-channel', 'new-acknowledgement', $data);
+    });
+    //Realtime Message Broadcasting
+    Route::get('/broadcastMessage/{message_id}', function($message_id){
+        $options = array(
+            'cluster' => 'ap1',
+            'useTLS' => true
+          );
+          $pusher = new Pusher\Pusher(
+            '378b727ac032138844eb',
+            '4e22ed055b9e20179c93',
+            '956675',
+            $options
+          );
+        
+          $message = App\Message::find($message_id);
+          $data['message'] = $message->message;
+          $data['recepient_id'] = $message->recepient_id;
+          $data['user_id'] = $message->user_id;
+          $pusher->trigger('comment-channel', 'new-message', $data);
     });
     
 });
