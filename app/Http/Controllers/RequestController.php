@@ -32,4 +32,42 @@ class RequestController extends Controller
         return redirect('servicerequests');
     }
 
+    public function viewRequest($id)
+    {
+        $request = ServiceRequest::findOrFail($id);
+        return view('viewrequest')->with(['request' => $request]);
+    }
+
+    public function accept($id)
+    {
+        $request = ServiceRequest::findOrFail($id);
+        $request->status = "In-progress";
+        $request->save();
+        return back();
+    }
+
+    public function decline($id)
+    {
+        $request = ServiceRequest::findOrFail($id);
+        $request->status = "Declined";
+        $request->save();
+        return back();
+    }
+
+    public function complete($id)
+    {
+        $request = ServiceRequest::findOrFail($id);
+        $request->status = "Completed";
+        $request->save();
+        return back();
+    }
+
+    public function cancel($id)
+    {
+        $request = ServiceRequest::findOrFail($id);
+        $request->status = "Cancelled";
+        $request->save();
+        return back();
+    }
+
 }

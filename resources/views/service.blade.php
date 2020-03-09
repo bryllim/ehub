@@ -22,7 +22,7 @@
                         @foreach($assignedRequests as $assignedRequest)
                         <tr>
                             <td>{{ $assignedRequest->id }}</td>
-                            <td><a href="#">{{ $assignedRequest->title }}</a></td>
+                            <td><a href="{{ url('request').'/'.$assignedRequest->id }}">{{ $assignedRequest->title }}</a></td>
                             <td><small>{{ $assignedRequest->user->department->name }}</small></td>
                             <td>{{ date("F j, Y g:h A", strtotime($assignedRequest->deadline)) }}</td>
                             <td>
@@ -97,7 +97,7 @@
                         @foreach($myRequests as $myRequest)
                         <tr>
                         <td>{{ $myRequest->id }}</td>
-                            <td><a href="#">{{ $myRequest->title }}</a></td>
+                            <td><a href="{{ url('request').'/'.$myRequest->id }}">{{ $myRequest->title }}</a></td>
                             <td><small>{{ $myRequest->department->name }}</small></td>
                             <td>{{ date("F j, Y g:h A", strtotime($myRequest->deadline)) }}</td>
                             <td>
