@@ -28,6 +28,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/decline/{id}', 'RequestController@decline')->name('decline');
     Route::get('/complete/{id}', 'RequestController@complete')->name('complete');
     Route::get('/cancel/{id}', 'RequestController@cancel')->name('cancel');
+    Route::get('/delete/{id}', 'RequestController@delete')->name('delete');
     
     Route::post('/newPost', 'PostController@newPost')->name('newPost');
     Route::post('/newComment', 'CommentController@newComment')->name('newComment');

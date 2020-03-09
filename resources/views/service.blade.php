@@ -26,7 +26,7 @@
                             <td><small>{{ $assignedRequest->user->department->name }}</small></td>
                             <td>{{ date("F j, Y g:h A", strtotime($assignedRequest->deadline)) }}</td>
                             <td>
-                                @if((date("F j, Y g:h A") > strtotime($assignedRequest->deadline)) && ($assignedRequest->status != "Cancelled" || $assignedRequest->status != "Declined"))
+                                @if((date('Y-m-d H:i:s') > $myRequest->deadline) && ($myRequest->status != "Cancelled" || $myRequest->status != "Declined"))
                                 <span class="label bg-red"><small>OVERDUE</small></span>
                                 @endif
                                 @if($assignedRequest->status == "Pending")
@@ -66,13 +66,13 @@
     <div class="col-md-4">
         <button type="button" class="btn btn-secondary btn-block" style="pointer-events: none;">
             <i class="material-icons text-muted">assignment_turned_in</i>
-            <span>Service Requests Completed:&nbsp; <b>23</b></span>
+            <span>Service Requests Completed:&nbsp; <b>{{ $completed }}</b></span>
         </button>
     </div>
     <div class="col-md-4">
         <button type="button" class="btn btn-secondary btn-block" style="pointer-events: none;">
             <i class="material-icons text-muted">assignment</i>
-            <span>My Service Requests:&nbsp; <b>145</b></span>
+            <span>My Service Requests:&nbsp; <b>{{ $myrequests }}</b></span>
         </button>
     </div>
 </div>
@@ -101,7 +101,7 @@
                             <td><small>{{ $myRequest->department->name }}</small></td>
                             <td>{{ date("F j, Y g:h A", strtotime($myRequest->deadline)) }}</td>
                             <td>
-                                @if((date("F j, Y g:h A") > strtotime($myRequest->deadline)) && ($myRequest->status != "Cancelled" || $myRequest->status != "Declined"))
+                                @if((date('Y-m-d H:i:s') > $myRequest->deadline) && ($myRequest->status != "Cancelled" || $myRequest->status != "Declined"))
                                 <span class="label bg-red"><small>OVERDUE</small></span>
                                 @endif
                                 @if($myRequest->status == "Pending")

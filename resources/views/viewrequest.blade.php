@@ -27,7 +27,7 @@
                 </div>
                 <div class="col-md-5">
                     <p>Status: 
-                    @if((date("F j, Y g:h A") > strtotime($request->deadline)) && ($request->status != "Cancelled" || $request->status != "Declined"))
+                    @if((date('Y-m-d H:i:s') > $request->deadline) && ($request->status != "Cancelled" || $request->status != "Declined"))
                     <span class="label bg-red"><small>OVERDUE</small></span>
                     @endif
                     @if($request->status == "Pending")

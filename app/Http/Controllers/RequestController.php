@@ -9,7 +9,9 @@ class RequestController extends Controller
 {
     public function index()
     {
-        return view("service");
+        $completed   = ServiceRequest::where('status', 'Completed')->where('department_id', Auth::user()->department->id)->count();
+        $myrequests  = ServiceRequest::where('user_id', Auth::user()->id)->count();
+        return view("service")->with(['completed' => $completed, 'myrequests' => $myrequests]);
     }
 
     public function newRequest()
@@ -51,7 +53,9 @@ class RequestController extends Controller
         $request = ServiceRequest::findOrFail($id);
         $request->status = "Declined";
         $request->save();
-        return back();
+
+        alert()->success(' ', 'Service Request declined!');
+        return redirect('servicerequests');
     }
 
     public function complete($id)
@@ -59,7 +63,9 @@ class RequestController extends Controller
         $request = ServiceRequest::findOrFail($id);
         $request->status = "Completed";
         $request->save();
-        return back();
+        
+        alert()->success(' ', 'Service Request completed!');
+        return redirect('servicerequests');
     }
 
     public function cancel($id)
@@ -67,7 +73,18 @@ class RequestController extends Controller
         $request = ServiceRequest::findOrFail($id);
         $request->status = "Cancelled";
         $request->save();
-        return back();
+        
+        alert()->success(' ', 'Service Request cancelled!');
+        return redirect('servicerequests');
+    }
+
+    public function delete($id)
+    {
+        $request = ServiceRequest::findOrFail($id);
+        $request->delete();
+
+        alert()->success(' ', 'Service Request deleted!');
+        return redirect('servicerequests');
     }
 
 }
