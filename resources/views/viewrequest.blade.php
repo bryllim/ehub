@@ -58,8 +58,49 @@
             </div>
             <div class="body">
                 {!! $request->description !!}
+                @if(count($remarks)>0)
+                <hr>
+                @foreach($remarks as $remark)
+                <div class="font-12 well" style="border-radius: 5px; padding-left:10px; padding-top:10px; padding-bottom:2px; padding-right:10px; margin-bottom:3px">
+                    <p><b>{{ $remark->user->name }}</b> <span class="text-muted" style="float:right"><small><i class="material-icons font-12">access_time</i> {{ $remark->created_at->diffForHumans() }}</small></span></p>
+                    <p style="margin-top: -5px">{{ $remark->content }}</p>
+                </div>
+                @endforeach
+                @endif
+                <hr>
+                <div class="form-group">
+                    <div class="form-line">
+                        <input type="text" class="form-control new_comment" placeholder="Write a comment...">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+// New Comment
+$('.new_comment').keypress(function(event){
+    
+	var keycode = (event.keyCode ? event.keyCode : event.which);
+	if(keycode == '13'){
+        var comment = $(this);
+        var request_id = {{$request->id}};
+        var content = comment.val();
+        comment.val('');
+
+		$.ajax({
+            type:'POST',
+            url:"{{ route('newRemark') }}",
+            headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+            data: {content: content, request_id: request_id},
+            success:function(data) {
+                location.reload();
+            }
+        });
+
+	}
+});
+</script>
 @endsection

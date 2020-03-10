@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\ServiceRequest;
 use Auth;
+use App\Remark;
 
 class RequestController extends Controller
 {
@@ -37,7 +38,8 @@ class RequestController extends Controller
     public function viewRequest($id)
     {
         $request = ServiceRequest::findOrFail($id);
-        return view('viewrequest')->with(['request' => $request]);
+        $remarks = Remark::where('request_id', $id)->get();
+        return view('viewrequest')->with(['request' => $request, 'remarks' => $remarks]);
     }
 
     public function accept($id)
