@@ -124,7 +124,7 @@
                 <hr>
                 <div class="list-group">
                     <a href="javascript:void(0);" class="list-group-item disabled" style="color:black !important">
-                        <b>Employees</b> <span class="badge bg-green"><small>ONLINE</small></span>
+                        <b>Employees</b>
                     </a>
                     <?php
                         $users = new App\User;
@@ -132,7 +132,7 @@
                     ?>
                     @foreach($onlineusers as $onlineuser)
                         @if($onlineuser->id != Auth::user()->id)
-                            <a href="{{ url('message').'/'.$onlineuser->id }}" class="list-group-item font-12 bg-green" style="padding-top:0px"><p></p> {{$onlineuser->name}}</a>
+                            <a href="{{ url('message').'/'.$onlineuser->id }}" class="list-group-item font-12"><span style="height: 9px; width: 9px; background-color: green; border-radius: 50%; display: inline-block; margin-right: 5px"></span>{{ $onlineuser->name }}</a>
                         @endif
                     @endforeach
                     <?php
@@ -143,7 +143,7 @@
                             $online = App\User::find($user->id);
                         ?>
                         @if(!$online->isOnline())
-                            <a href="{{ url('message').'/'.$user->id }}" class="list-group-item font-12" style="padding-top:0px"><p></p>{{ $user->name }}</a>
+                            <a href="{{ url('message').'/'.$user->id }}" class="list-group-item font-12">{{ $user->name }}</a>
                         @endif
                     @endforeach
                 </div>
