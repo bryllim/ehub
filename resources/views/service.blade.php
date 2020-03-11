@@ -26,7 +26,7 @@
                             <td><small>{{ $assignedRequest->user->department->name }}</small></td>
                             <td>{{ date("F j, Y g:h A", strtotime($assignedRequest->deadline)) }}</td>
                             <td>
-                                @if((date('Y-m-d H:i:s') > $myRequest->deadline) && ($myRequest->status != "Cancelled" || $myRequest->status != "Declined"))
+                                @if((date('Y-m-d H:i:s') > $assignedRequest->deadline) && ($assignedRequest->status != "Cancelled" || $assignedRequest->status != "Declined"))
                                 <span class="label bg-red"><small>OVERDUE</small></span>
                                 @endif
                                 @if($assignedRequest->status == "Pending")

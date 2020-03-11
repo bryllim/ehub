@@ -55,6 +55,7 @@
     </div>
 </div>
 <script src="https://js.pusher.com/5.1/pusher.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.3/howler.core.min.js"></script>
 <script>
 $('#conversation').scrollTop($('#conversation')[0].scrollHeight);
 
@@ -127,6 +128,10 @@ var pusher = new Pusher('378b727ac032138844eb', {
             );    
             
             $('#conversation').scrollTop($('#conversation')[0].scrollHeight);
+            var sound = new Howl({
+                src: ['{{ url("/sounds")."/message.mp3" }}', '{{ url("/sounds")."/message.mp3" }}']
+                });
+            sound.play();
         }
     });            
 
