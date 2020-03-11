@@ -44,7 +44,8 @@
     <!-- Select Plugin Js -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
     <script src="{{ asset('plugins/bootstrap-select/js/bootstrap-select.js') }}"></script>
-
+    <script src="{{ asset('plugins/bootstrap-notify/bootstrap-notify.js') }}"></script>
+    
     <!-- Include the Quill library -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
@@ -72,10 +73,36 @@
     <!-- Demo Js -->
     <script src="{{ asset('js/demo.js') }}"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    
+    <script src="https://js.pusher.com/5.1/pusher.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.3/howler.core.min.js"></script>
 
     <!-- Datatable Js -->
     <script type="text/javascript" charset="utf8" src="{{ asset('plugins/jquery-datatable/jquery.dataTables.js') }}"></script>
     <script type="text/javascript" charset="utf8" src="{{ asset('plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.min.js') }}"></script>
+
+    <style>
+    .alert-minimalist {
+        background-color: rgb(241, 242, 240) !important;
+        border-color: rgba(149, 149, 149, 0.3) !important;
+        border-radius: 3px !important;
+        color: rgb(149, 149, 149) !important;
+        padding: 15px !important;
+    }
+    .alert-minimalist > [data-notify="icon"] {
+        height: 50px !important;
+        margin-right: 12px !important;
+    }
+    .alert-minimalist > [data-notify="title"] {
+        color: rgb(51, 51, 51) !important;
+        display: block !important;
+        font-weight: bold !important;
+        margin-bottom: 5px !important;
+    }
+    .alert-minimalist > [data-notify="message"] {
+        font-size: 90% !important;
+    }
+    </style>
 </head>
 <body class="theme-green">  
     @include('sweet::alert')
@@ -293,6 +320,43 @@
             @yield('content')
         </div>
     </section>
+    <script>
+
+    @if( !request()->routeIs('conversation') )
+    var pusher = new Pusher('378b727ac032138844eb', {
+      cluster: 'ap1',
+      forceTLS: true
+    });
+
+    var channel = pusher.subscribe('comment-channel');
+    channel.bind('new-message', function(data) {
+        if(data.recepient_id == {{ Auth::user()->id }})
+        {
+            $.notify({
+            title: data.name,
+            message: data.message
+            },{
+                type: 'minimalist',
+                delay: 5000,
+                icon_type: 'image',
+                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+                    '<a href="'+"{{ url('message') }}/"+data.user_id+'" data-notify="title">{1}</a>' +
+                    '<span data-notify="message">{2}</span>' +
+                '</div>',
+                animate: {
+                    enter: 'animated fadeInRight',
+                    exit: 'animated fadeOutRight'
+                }
+            });
+
+            var sound = new Howl({
+                src: ['{{ url("/sounds")."/message.mp3" }}', '{{ url("/sounds")."/message.mp3" }}']
+                });
+            sound.play();
+        }
+    });
+    @endif
+    </script>
 </body>
 
 </html>

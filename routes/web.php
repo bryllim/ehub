@@ -42,7 +42,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/storeRequest', 'RequestController@storeRequest')->name('storeRequest');
 
     Route::get('/messages', 'MessageController@index')->name('messages');
-    Route::get('/message/{id}', 'MessageController@conversation');
+    Route::get('/message/{id}', 'MessageController@conversation')->name('conversation');
     Route::post('/newMessage', 'MessageController@newMessage')->name('newMessage');
 
     //Realtime Comment Broadcasting
@@ -95,6 +95,7 @@ Route::group(['middleware' => 'auth'], function () {
           $data['message'] = $message->message;
           $data['recepient_id'] = $message->recepient_id;
           $data['user_id'] = $message->user_id;
+          $data['name'] = $message->user->name;
           $pusher->trigger('comment-channel', 'new-message', $data);
     });
     

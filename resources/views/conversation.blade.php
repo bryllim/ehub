@@ -54,8 +54,6 @@
         </div>
     </div>
 </div>
-<script src="https://js.pusher.com/5.1/pusher.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.3/howler.core.min.js"></script>
 <script>
 $('#conversation').scrollTop($('#conversation')[0].scrollHeight);
 

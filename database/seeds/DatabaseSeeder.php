@@ -40,18 +40,26 @@ class DatabaseSeeder extends Seeder
 
         DB::table('users')->insert([
             'name' => "Cris Lawrence Adrian Militante",
-            'email' => "clam@gcm.edu.ph",
+            'email' => "clamilitante@gcm.edu.ph",
             'password' => Hash::make('password'),
             'position' => "Director",
             'department_id' => "11",
         ]);
 
         DB::table('users')->insert([
-            'name' => "Albim Cabatingan",
-            'email' => "albim@gcm.edu.ph",
+            'name' => "Nichelle Faye Galicia",
+            'email' => "nfgalicia@gcm.edu.ph",
             'password' => Hash::make('password'),
-            'position' => "Director",
-            'department_id' => "4",
+            'position' => "Executive Secretary",
+            'department_id' => "10",
+        ]);
+
+        DB::table('users')->insert([
+            'name' => "Rosemarie Español",
+            'email' => "rcespanol@gcm.edu.ph",
+            'password' => Hash::make('password'),
+            'position' => "Vice President",
+            'department_id' => "10",
         ]);
     }
 }
