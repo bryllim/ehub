@@ -268,6 +268,8 @@
                 <h3 style="margin-top:10px">{{ Auth::user()->name }}</h3>
                 <p class="margin-0">{{ Auth::user()->position }},</p>
                 <small><b>{{ Auth::user()->department->name }}</b></small>
+                <hr>
+                <a href="{{ route('changepassword') }}" style="color:forestgreen"><small>CHANGE PASSWORD</small></a>
             </div>
             <!-- #User Info -->
             <!-- Menu -->

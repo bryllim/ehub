@@ -21,6 +21,7 @@ Auth::routes();
 Route::group(['middleware' => 'auth'], function () {
     
     Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/changepassword', 'HomeController@changepassword')->name('changepassword');
     Route::get('/servicerequests', 'RequestController@index')->name('servicerequests');
     Route::get('/newRequest', 'RequestController@newRequest')->name('newRequest');
     Route::get('/request/{id}', 'RequestController@viewRequest')->name('viewRequest');
@@ -29,6 +30,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/complete/{id}', 'RequestController@complete')->name('complete');
     Route::get('/cancel/{id}', 'RequestController@cancel')->name('cancel');
     Route::get('/delete/{id}', 'RequestController@delete')->name('delete');
+    
+    Route::post('/passwordchange', 'HomeController@passwordchange')->name('passwordchange');
 
     Route::post('/newRemark', 'RemarkController@newRemark')->name('newRemark');
     
