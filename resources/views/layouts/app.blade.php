@@ -142,6 +142,14 @@
                     <li class="dropdown">
                         <a href="{{ route('messages') }}">
                             <i class="material-icons">chat</i>
+                            <?php
+                                $unread = App\Message::where('recepient_id', Auth::user()->id)->where('read', false)->count();
+                            ?>
+                            <span class="label-count bg-red" id="message_count">
+                            @if($unread>0)
+                            {{ $unread }}
+                            @endif
+                            </span>
                         </a>
                     </li>
                     <!-- #END# Messages -->
@@ -355,6 +363,8 @@
                 src: ['{{ url("/sounds")."/message.mp3" }}', '{{ url("/sounds")."/message.mp3" }}']
                 });
             sound.play();
+
+            $('#message_count').text(($('#message_count').text()*1)+1);
         }
     });
     @endif

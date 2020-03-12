@@ -17,6 +17,11 @@ class MessageController extends Controller
     public function conversation($id)
     {
         $user = User::findOrFail($id);
+
+        $unread = Message::where('recepient_id', Auth::user()->id)
+                        ->where('user_id', $user->id)
+                        ->update(['read' => true]);
+
         $messages = Message::where('recepient_id', $user->id)
                            ->where('user_id', Auth::user()->id)
                            ->orWhere('recepient_id', Auth::user()->id)
@@ -34,5 +39,14 @@ class MessageController extends Controller
         $message->save();
         
         return $message->id;
+    }
+
+    public function readMessage(Request $request)
+    {
+        $message = Message::find($request->message_id);
+        $message->read = true;
+        $message->save();
+
+        return 1;
     }
 }

@@ -130,6 +130,15 @@ var pusher = new Pusher('378b727ac032138844eb', {
                 src: ['{{ url("/sounds")."/message.mp3" }}', '{{ url("/sounds")."/message.mp3" }}']
                 });
             sound.play();
+            
+            $.ajax({
+                type:'POST',
+                url:"{{ route('readMessage') }}",
+                headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                data: {message_id: data.message_id}
+            });
         }
     });            
 

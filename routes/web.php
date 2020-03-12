@@ -47,6 +47,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/messages', 'MessageController@index')->name('messages');
     Route::get('/message/{id}', 'MessageController@conversation')->name('conversation');
     Route::post('/newMessage', 'MessageController@newMessage')->name('newMessage');
+    Route::post('/readMessage', 'MessageController@readMessage')->name('readMessage');
 
     //Realtime Comment Broadcasting
     Route::get('/broadcastComment/{post_id}', function($post_id){
@@ -96,6 +97,7 @@ Route::group(['middleware' => 'auth'], function () {
         
           $message = App\Message::find($message_id);
           $data['message'] = $message->message;
+          $data['message_id'] = $message_id;
           $data['recepient_id'] = $message->recepient_id;
           $data['user_id'] = $message->user_id;
           $data['name'] = $message->user->name;
