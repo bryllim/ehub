@@ -322,9 +322,7 @@
                                 body: data.message,
                             });
                         } else {
-                            swal("You have disabled push notifications.", {
-                                 button: false,
-                            });
+                            console.log('User blocked notifications.');
                         }
                     }).catch(function (err) {
                         console.error(err);
