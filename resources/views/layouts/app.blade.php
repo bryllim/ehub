@@ -155,109 +155,36 @@
                     <!-- #END# Messages -->
                     <!-- Notifications -->
                     <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">
+                        <?php
+                            $notifications = App\Notification::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->take(4)->get();
+                            $notification_count = App\Notification::where('user_id', Auth::user()->id)->where('read', false)->count();
+                        ?>
+                        <a href="#" id="readNotification" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">
                             <i class="material-icons">notifications</i>
-                            <span class="label-count bg-red">7</span>
+                            <span class="label-count bg-red" id="notificationCount">
+                            @if($notification_count>0)
+                            {{ $notification_count }}
+                            @endif
+                            </span>
                         </a>
                         <ul class="dropdown-menu">
                             <li class="header">NOTIFICATIONS</li>
                             <li class="body">
                                 <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 254px;"><ul class="menu" style="overflow: hidden; width: auto; height: 254px;">
+                                    @foreach($notifications as $notification)
                                     <li>
                                         <a href="javascript:void(0);" class=" waves-effect waves-block">
-                                            <div class="icon-circle bg-light-green">
-                                                <i class="material-icons">person_add</i>
-                                            </div>
                                             <div class="menu-info">
-                                                <h4>12 new members joined</h4>
-                                                <p>
-                                                    <i class="material-icons">access_time</i> 14 mins ago
-                                                </p>
+                                                <h4>{{ $notification->content }}</h4>
+                                                <p><i class="material-icons">access_time</i> {{ $notification->created_at->diffForHumans() }}</p>
                                             </div>
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class=" waves-effect waves-block">
-                                            <div class="icon-circle bg-cyan">
-                                                <i class="material-icons">add_shopping_cart</i>
-                                            </div>
-                                            <div class="menu-info">
-                                                <h4>4 sales made</h4>
-                                                <p>
-                                                    <i class="material-icons">access_time</i> 22 mins ago
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class=" waves-effect waves-block">
-                                            <div class="icon-circle bg-red">
-                                                <i class="material-icons">delete_forever</i>
-                                            </div>
-                                            <div class="menu-info">
-                                                <h4><b>Nancy Doe</b> deleted account</h4>
-                                                <p>
-                                                    <i class="material-icons">access_time</i> 3 hours ago
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class=" waves-effect waves-block">
-                                            <div class="icon-circle bg-orange">
-                                                <i class="material-icons">mode_edit</i>
-                                            </div>
-                                            <div class="menu-info">
-                                                <h4><b>Nancy</b> changed name</h4>
-                                                <p>
-                                                    <i class="material-icons">access_time</i> 2 hours ago
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class=" waves-effect waves-block">
-                                            <div class="icon-circle bg-blue-grey">
-                                                <i class="material-icons">comment</i>
-                                            </div>
-                                            <div class="menu-info">
-                                                <h4><b>John</b> commented your post</h4>
-                                                <p>
-                                                    <i class="material-icons">access_time</i> 4 hours ago
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class=" waves-effect waves-block">
-                                            <div class="icon-circle bg-light-green">
-                                                <i class="material-icons">cached</i>
-                                            </div>
-                                            <div class="menu-info">
-                                                <h4><b>John</b> updated status</h4>
-                                                <p>
-                                                    <i class="material-icons">access_time</i> 3 hours ago
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class=" waves-effect waves-block">
-                                            <div class="icon-circle bg-purple">
-                                                <i class="material-icons">settings</i>
-                                            </div>
-                                            <div class="menu-info">
-                                                <h4>Settings updated</h4>
-                                                <p>
-                                                    <i class="material-icons">access_time</i> Yesterday
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </li>
+                                    @endforeach
                                 </ul><div class="slimScrollBar" style="background: rgba(0, 0, 0, 0.5); width: 4px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 0px; z-index: 99; right: 1px; height: 181.225px;"></div><div class="slimScrollRail" style="width: 4px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 0px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div></div>
                             </li>
                             <li class="footer">
-                                <a href="javascript:void(0);" class=" waves-effect waves-block">View All Notifications</a>
+                                <a href="{{ route('allNotifications') }}" class=" waves-effect waves-block">View All Notifications</a>
                             </li>
                         </ul>
                     </li>
@@ -368,6 +295,20 @@
         }
     });
     @endif
+
+    $('#readNotification').click(function(){
+        $.ajax({
+                type:'POST',
+                url:"{{ route('readNotification') }}",
+                headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                data: {user_id: {{ Auth::user()->id }}},
+                success:function(data) {
+                    $('#notificationCount').text('');
+                }
+            });
+    });
     </script>
 </body>
 

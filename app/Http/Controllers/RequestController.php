@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\ServiceRequest;
 use Auth;
 use App\Remark;
+use App\Notification;
 
 class RequestController extends Controller
 {
@@ -47,6 +48,12 @@ class RequestController extends Controller
         $request = ServiceRequest::findOrFail($id);
         $request->status = "In-progress";
         $request->save();
+        
+        $notification = new Notification;
+        $notification->content = Auth::user()->name." accepted your service request.";
+        $notification->user_id = $request->user->id;
+        $notification->save();
+
         return back();
     }
 
@@ -55,6 +62,11 @@ class RequestController extends Controller
         $request = ServiceRequest::findOrFail($id);
         $request->status = "Declined";
         $request->save();
+
+        $notification = new Notification;
+        $notification->content = Auth::user()->name." declined your service request.";
+        $notification->user_id = $request->user->id;
+        $notification->save();
 
         alert()->success(' ', 'Service Request declined!');
         return redirect('servicerequests');
@@ -65,6 +77,11 @@ class RequestController extends Controller
         $request = ServiceRequest::findOrFail($id);
         $request->status = "Completed";
         $request->save();
+
+        $notification = new Notification;
+        $notification->content = Auth::user()->name." completed your service request.";
+        $notification->user_id = $request->user->id;
+        $notification->save();
         
         alert()->success(' ', 'Service Request completed!');
         return redirect('servicerequests');
@@ -75,6 +92,11 @@ class RequestController extends Controller
         $request = ServiceRequest::findOrFail($id);
         $request->status = "Cancelled";
         $request->save();
+
+        $notification = new Notification;
+        $notification->content = Auth::user()->name." cancelled your service request.";
+        $notification->user_id = $request->user->id;
+        $notification->save();
         
         alert()->success(' ', 'Service Request cancelled!');
         return redirect('servicerequests');

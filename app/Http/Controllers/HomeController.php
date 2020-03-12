@@ -7,6 +7,7 @@ use Auth;
 use App\User;
 use SweetAlert;
 use Hash;
+use App\Notification;
 
 class HomeController extends Controller
 {
@@ -33,6 +34,21 @@ class HomeController extends Controller
     public function changepassword()
     {
         return view('changepassword');
+    }
+
+    public function allNotifications()
+    {
+        $notifications = Notification::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->get();
+
+        return view('notifications')->with(['notifications' => $notifications]);
+    }
+
+    public function readNotification(Request $request)
+    {
+        $notifications = Notification::where('user_id', $request->user_id)
+                                    ->where('read', false)
+                                    ->update(['read' => true]);
+        return 1;
     }
 
     public function passwordchange(Request $request)
