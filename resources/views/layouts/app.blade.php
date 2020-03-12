@@ -217,6 +217,14 @@
                             <span>Home</span>
                         </a>
                     </li>
+                    @if(Auth::user()->id == 1)
+                    <li class="{{ ( request()->routeIs('departmentstatus') ) ? 'active' : '' }}">
+                        <a href="{{ route('departmentstatus') }}">
+                            <i class="material-icons">assessment</i>
+                            <span>Department Status</span>
+                        </a>
+                    </li>
+                    @endif
                     <li class="{{ ( request()->routeIs('servicerequests') ) ? 'active' : '' }}">
                         <a href="{{ route('servicerequests') }}">
                             <i class="material-icons">assignment</i>
@@ -258,7 +266,7 @@
         </div>
     </section>
     <script>
-
+    Notification.requestPermission();
     @if( !request()->routeIs('conversation') )
     var pusher = new Pusher('378b727ac032138844eb', {
       cluster: 'ap1',
@@ -292,6 +300,37 @@
             sound.play();
 
             $('#message_count').text(($('#message_count').text()*1)+1);
+
+            if (!window.Notification) {
+                swal("This browser does not support desktop notifications.", {
+                button: false,
+                });
+            } else {
+                // check if permission is already granted
+                if (Notification.permission === 'granted') {
+                    // show notification here
+                    var notify = new Notification(data.name, {
+                        body: data.message,
+                        icon: "{{ url('/') }}"+"/favicon.ico",
+                    });
+                } else {
+                    // request permission from user
+                    Notification.requestPermission().then(function (p) {
+                        if (p === 'granted') {
+                            // show notification here
+                            var notify = new Notification(data.name, {
+                                body: data.message,
+                            });
+                        } else {
+                            swal("You have disabled push notifications.", {
+                                 button: false,
+                            });
+                        }
+                    }).catch(function (err) {
+                        console.error(err);
+                    });
+                }
+            }
         }
     });
     @endif

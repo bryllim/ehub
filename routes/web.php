@@ -21,6 +21,7 @@ Auth::routes();
 Route::group(['middleware' => 'auth'], function () {
     
     Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/departmentstatus', 'HomeController@departmentstatus')->name('departmentstatus');
     Route::get('/allNotifications', 'HomeController@allNotifications')->name('allNotifications');
     Route::get('/changepassword', 'HomeController@changepassword')->name('changepassword');
     Route::get('/servicerequests', 'RequestController@index')->name('servicerequests');

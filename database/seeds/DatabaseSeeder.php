@@ -31,6 +31,14 @@ class DatabaseSeeder extends Seeder
         DB::table('departments')->insert($departments);
 
         DB::table('users')->insert([
+            'name' => "Rosemarie Español",
+            'email' => "rcespanol@gcm.edu.ph",
+            'password' => Hash::make('password'),
+            'position' => "Vice President",
+            'department_id' => "10",
+        ]);
+
+        DB::table('users')->insert([
             'name' => "Bryl Kezter Lim",
             'email' => "bklim@gcm.edu.ph",
             'password' => Hash::make('password'),
@@ -51,14 +59,6 @@ class DatabaseSeeder extends Seeder
             'email' => "nfgalicia@gcm.edu.ph",
             'password' => Hash::make('password'),
             'position' => "Executive Secretary",
-            'department_id' => "10",
-        ]);
-
-        DB::table('users')->insert([
-            'name' => "Rosemarie Español",
-            'email' => "rcespanol@gcm.edu.ph",
-            'password' => Hash::make('password'),
-            'position' => "Vice President",
             'department_id' => "10",
         ]);
     }

@@ -36,6 +36,15 @@ class HomeController extends Controller
         return view('changepassword');
     }
 
+    public function departmentstatus()
+    {
+        if(Auth::user()->id != 1){
+            return redirect('home');
+        }else{
+            return view('departmentstatus');
+        }
+    }
+
     public function allNotifications()
     {
         $notifications = Notification::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->get();
