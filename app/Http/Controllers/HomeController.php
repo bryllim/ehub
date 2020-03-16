@@ -8,6 +8,8 @@ use App\User;
 use SweetAlert;
 use Hash;
 use App\Notification;
+use App\ServiceRequest;
+use App\Department;
 
 class HomeController extends Controller
 {
@@ -41,7 +43,18 @@ class HomeController extends Controller
         if(Auth::user()->id != 1){
             return redirect('home');
         }else{
-            return view('departmentstatus');
+
+            $pending = ServiceRequest::where('status', 'Pending')->count();
+            $progress = ServiceRequest::where('status', 'In-progress')->count();
+            $completed = ServiceRequest::where('status', 'Completed')->count();
+            $departments = Department::all();
+
+            return view('departmentstatus')->with([
+                "pending" => $pending,
+                "progress" => $progress,
+                "completed" => $completed,
+                "departments" => $departments
+            ]);
         }
     }
 
